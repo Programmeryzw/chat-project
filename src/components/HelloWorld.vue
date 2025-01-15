@@ -15,23 +15,19 @@ interface IappInfo {
   name: string
 }
 
-interface IprovideData {
-  data: string
-}
-
-
 const provideData: IprovideData = inject('provideData') as IprovideData;
-const emit = defineEmits(['addCount'])
+const emit = defineEmits<{
+  addCount: [childCount: number]
+}>();
 
 const props = defineProps<{ 
-  msg: {},
+  msg: string,
   appInfo: IappInfo,
   name:string,
   age: number,
 }>()
 
 const attrs = useAttrs();
-attrs.onAlertFn();
 
 onMounted(() => {
   console.log('child onMounted', provideData, props)
@@ -44,7 +40,7 @@ const add = () => {
   console.log('add click');
   count.value++;
   emit('addCount', count.value);
-  attrs.onAlertFn();
+  (attrs.onAlertFn as (...args: any[]) => any)();
 }
 
 const changeProvide = () => {
